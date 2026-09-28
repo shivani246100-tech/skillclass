@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { DashboardShell } from "@/components/DashboardShell";
@@ -6,8 +7,13 @@ import { DashboardShell } from "@/components/DashboardShell";
 export default async function SellerDashboard() {
   const user = await getCurrentUser();
 
-  if (!user) redirect("/login");
-  if (user.role !== "SELLER") redirect("/");
+  if (!user) {
+    redirect("/login");
+  }
+
+  if (user.role !== "SELLER") {
+    redirect("/");
+  }
 
   const [books, payments, wallet] = await Promise.all([
     prisma.pdfBook.findMany({
@@ -81,14 +87,26 @@ export default async function SellerDashboard() {
     <DashboardShell role="SELLER" name={user.name}>
       <div className="section-head">
         <div>
+          <p
+            className="muted"
+            style={{
+              marginBottom: "6px",
+              fontWeight: 700,
+              letterSpacing: "1px",
+            }}
+          >
+            SELLER CENTER
+          </p>
+
           <h1>Seller Dashboard</h1>
+
           <p className="muted">
             Manage your educational PDF books, sales and earnings.
           </p>
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Main Stats */}
       <div className="stats">
         <div className="stat">
           <div className="stat-label">PDF Books</div>
@@ -118,7 +136,7 @@ export default async function SellerDashboard() {
         </div>
       </div>
 
-      {/* Seller Earnings */}
+      {/* Earnings */}
       <div
         className="grid-3"
         style={{
@@ -127,19 +145,23 @@ export default async function SellerDashboard() {
       >
         <div className="card">
           <h3>Total Sales Value</h3>
+
           <p className="price">
             ₹{totalSalesAmount.toLocaleString("en-IN")}
           </p>
+
           <p className="muted">
-            Approved PDF purchases
+            Approved PDF sales
           </p>
         </div>
 
         <div className="card">
           <h3>Your Earnings</h3>
+
           <p className="price">
             ₹{totalEarnings.toLocaleString("en-IN")}
           </p>
+
           <p className="muted">
             After 10% platform commission
           </p>
@@ -147,16 +169,18 @@ export default async function SellerDashboard() {
 
         <div className="card">
           <h3>Platform Commission</h3>
+
           <p className="price">
             ₹{platformCommission.toLocaleString("en-IN")}
           </p>
+
           <p className="muted">
             10% platform share
           </p>
         </div>
       </div>
 
-      {/* Seller Actions */}
+      {/* Seller Workspace */}
       <div
         className="card"
         style={{
@@ -166,6 +190,7 @@ export default async function SellerDashboard() {
         <div className="section-head">
           <div>
             <h2>Seller Workspace</h2>
+
             <p className="muted">
               Upload educational PDF books and submit them for Admin approval.
             </p>
@@ -180,9 +205,16 @@ export default async function SellerDashboard() {
             marginTop: "18px",
           }}
         >
+          <Link
+            href="/dashboard/seller/upload"
+            className="btn btn-primary"
+          >
+            ➕ Upload PDF Book
+          </Link>
+
           <a
             href="#books"
-            className="btn btn-primary"
+            className="btn"
           >
             📚 My PDF Books
           </a>
@@ -196,7 +228,7 @@ export default async function SellerDashboard() {
         </div>
       </div>
 
-      {/* Books */}
+      {/* PDF Books */}
       <div
         id="books"
         style={{
@@ -206,8 +238,9 @@ export default async function SellerDashboard() {
         <div className="section-head">
           <div>
             <h2>My PDF Books</h2>
+
             <p className="muted">
-              Your uploaded books and approval status.
+              Manage your uploaded educational books.
             </p>
           </div>
         </div>
@@ -215,9 +248,19 @@ export default async function SellerDashboard() {
         {books.length === 0 ? (
           <div className="card">
             <h3>No PDF books yet</h3>
+
             <p className="muted">
-              Your PDF books will appear here after you create them.
+              Start selling educational content by uploading your first PDF.
             </p>
+
+            <div style={{ marginTop: "18px" }}>
+              <Link
+                href="/dashboard/seller/upload"
+                className="btn btn-primary"
+              >
+                Upload Your First PDF
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="grid-3">
@@ -258,9 +301,21 @@ export default async function SellerDashboard() {
                   </p>
                 )}
 
+                {book.author && (
+                  <p className="muted">
+                    Author: {book.author}
+                  </p>
+                )}
+
+                {book.language && (
+                  <p className="muted">
+                    Language: {book.language}
+                  </p>
+                )}
+
                 <p>
-                  <strong>Price:</strong> ₹
-                  {book.price.toLocaleString("en-IN")}
+                  <strong>Price:</strong>{" "}
+                  ₹{book.price.toLocaleString("en-IN")}
                 </p>
 
                 <p>
@@ -284,7 +339,7 @@ export default async function SellerDashboard() {
         )}
       </div>
 
-      {/* Sales */}
+      {/* Sales History */}
       <div
         id="sales"
         style={{
@@ -294,6 +349,7 @@ export default async function SellerDashboard() {
         <div className="section-head">
           <div>
             <h2>Sales History</h2>
+
             <p className="muted">
               Approved purchases of your PDF books.
             </p>
@@ -303,6 +359,7 @@ export default async function SellerDashboard() {
         {payments.length === 0 ? (
           <div className="card">
             <h3>No sales yet</h3>
+
             <p className="muted">
               Your approved PDF sales will appear here.
             </p>
@@ -332,9 +389,7 @@ export default async function SellerDashboard() {
 
                     <p className="muted">
                       Date:{" "}
-                      {payment.createdAt.toLocaleDateString(
-                        "en-IN"
-                      )}
+                      {payment.createdAt.toLocaleDateString("en-IN")}
                     </p>
                   </div>
 
@@ -345,9 +400,7 @@ export default async function SellerDashboard() {
 
                     <p className="muted">
                       Your share: ₹
-                      {payment.recipientAmount.toLocaleString(
-                        "en-IN"
-                      )}
+                      {payment.recipientAmount.toLocaleString("en-IN")}
                     </p>
                   </div>
                 </div>
@@ -357,7 +410,7 @@ export default async function SellerDashboard() {
         )}
       </div>
 
-      {/* Commission information */}
+      {/* Earnings Policy */}
       <div
         className="card"
         style={{
@@ -365,12 +418,11 @@ export default async function SellerDashboard() {
           marginBottom: "30px",
         }}
       >
-        <h3>💰 Seller Earnings Policy</h3>
+        <h3>💰 Seller Earnings</h3>
 
         <p className="muted">
-          For every approved PDF book sale, SkillClass retains
-          10% as platform commission and the seller receives
-          90% of the payment amount.
+          SkillClass retains 10% platform commission on approved
+          PDF book sales. The seller receives 90%.
         </p>
 
         <p
@@ -379,8 +431,7 @@ export default async function SellerDashboard() {
             fontWeight: 600,
           }}
         >
-          Example: ₹500 sale → ₹50 platform commission →
-          ₹450 seller share.
+          Example: ₹500 sale → ₹50 platform commission → ₹450 seller share.
         </p>
       </div>
     </DashboardShell>
