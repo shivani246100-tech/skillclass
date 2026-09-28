@@ -2,7 +2,12 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, BookOpen, GraduationCap, ShieldCheck, Users } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  GraduationCap,
+  Users,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type Role = "STUDENT" | "TEACHER" | "SELLER";
@@ -21,7 +26,10 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  function changeField(field: keyof typeof form, value: string) {
+  function changeField(
+    field: keyof typeof form,
+    value: string
+  ) {
     setForm((previous) => ({
       ...previous,
       [field]: value,
@@ -47,7 +55,8 @@ export default function RegisterPage() {
 
       if (!response.ok) {
         setError(
-          data?.error || "Registration failed. Please try again."
+          data?.error ||
+            "Registration failed. Please try again."
         );
         return;
       }
@@ -59,14 +68,17 @@ export default function RegisterPage() {
       };
 
       router.push(
-        data?.redirectTo || redirectPaths[form.role]
+        data?.redirectTo ||
+          redirectPaths[form.role]
       );
 
       router.refresh();
     } catch (error) {
       console.error("Registration error:", error);
 
-      setError("Something went wrong. Please try again.");
+      setError(
+        "Something went wrong. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -76,14 +88,20 @@ export default function RegisterPage() {
     <main className="register-page">
       <div className="register-shell">
 
-        {/* LEFT BRAND PANEL */}
+        {/* =========================
+            LEFT BRAND PANEL
+        ========================= */}
+
         <section className="register-brand">
 
           <div className="brand-circle circle-one" />
           <div className="brand-circle circle-two" />
 
           <Link href="/" className="register-logo">
-            <span className="register-logo-mark">S</span>
+            <span className="register-logo-mark">
+              S
+            </span>
+
             <span>
               Skill<span>Class</span>
             </span>
@@ -105,8 +123,9 @@ export default function RegisterPage() {
             </h1>
 
             <p>
-              Create your SkillClass account and unlock a
-              smarter way to learn, teach and share knowledge.
+              Create your SkillClass account and
+              unlock a smarter way to learn,
+              teach and share knowledge.
             </p>
 
             <div className="register-points">
@@ -115,9 +134,12 @@ export default function RegisterPage() {
                 <span>
                   <GraduationCap size={19} />
                 </span>
+
                 <div>
                   <strong>Learn</strong>
-                  <small>Join live classes from teachers.</small>
+                  <small>
+                    Join live classes from teachers.
+                  </small>
                 </div>
               </div>
 
@@ -125,9 +147,13 @@ export default function RegisterPage() {
                 <span>
                   <Users size={19} />
                 </span>
+
                 <div>
                   <strong>Teach</strong>
-                  <small>Create classes and connect with students.</small>
+                  <small>
+                    Create classes and connect
+                    with students.
+                  </small>
                 </div>
               </div>
 
@@ -135,9 +161,12 @@ export default function RegisterPage() {
                 <span>
                   <BookOpen size={19} />
                 </span>
+
                 <div>
                   <strong>Share Knowledge</strong>
-                  <small>Sell useful digital PDF resources.</small>
+                  <small>
+                    Sell useful digital PDF resources.
+                  </small>
                 </div>
               </div>
 
@@ -151,36 +180,52 @@ export default function RegisterPage() {
 
         </section>
 
-        {/* RIGHT FORM */}
+        {/* =========================
+            RIGHT REGISTER FORM
+        ========================= */}
+
         <section className="register-form-panel">
 
           <div className="register-form-container">
 
             <div className="register-heading">
+
               <span className="form-kicker">
                 CREATE YOUR ACCOUNT
               </span>
 
-              <h2>Join SkillClass</h2>
+              <h2>
+                Join SkillClass
+              </h2>
 
               <p>
-                Choose your role and create your account.
+                Choose your role and create
+                your account.
               </p>
+
             </div>
 
             <form onSubmit={submit}>
 
-              {/* ROLE */}
+              {/* ACCOUNT TYPE */}
+
               <div className="field-group">
 
-                <label>Choose Account Type</label>
+                <label>
+                  Choose Account Type
+                </label>
 
                 <div className="role-grid">
+
+                  {/* STUDENT */}
 
                   <button
                     type="button"
                     onClick={() =>
-                      changeField("role", "STUDENT")
+                      changeField(
+                        "role",
+                        "STUDENT"
+                      )
                     }
                     className={`role-card ${
                       form.role === "STUDENT"
@@ -189,17 +234,29 @@ export default function RegisterPage() {
                     }`}
                   >
                     <span className="role-icon">
-                      <GraduationCap size={21} />
+                      <GraduationCap
+                        size={21}
+                      />
                     </span>
 
-                    <strong>Student</strong>
-                    <small>Learn & grow</small>
+                    <strong>
+                      Student
+                    </strong>
+
+                    <small>
+                      Learn & grow
+                    </small>
                   </button>
+
+                  {/* TEACHER */}
 
                   <button
                     type="button"
                     onClick={() =>
-                      changeField("role", "TEACHER")
+                      changeField(
+                        "role",
+                        "TEACHER"
+                      )
                     }
                     className={`role-card ${
                       form.role === "TEACHER"
@@ -211,14 +268,24 @@ export default function RegisterPage() {
                       <Users size={21} />
                     </span>
 
-                    <strong>Teacher</strong>
-                    <small>Teach live classes</small>
+                    <strong>
+                      Teacher
+                    </strong>
+
+                    <small>
+                      Teach live classes
+                    </small>
                   </button>
+
+                  {/* SELLER */}
 
                   <button
                     type="button"
                     onClick={() =>
-                      changeField("role", "SELLER")
+                      changeField(
+                        "role",
+                        "SELLER"
+                      )
                     }
                     className={`role-card ${
                       form.role === "SELLER"
@@ -230,8 +297,13 @@ export default function RegisterPage() {
                       <BookOpen size={21} />
                     </span>
 
-                    <strong>Seller</strong>
-                    <small>Sell PDF resources</small>
+                    <strong>
+                      Seller
+                    </strong>
+
+                    <small>
+                      Sell PDF resources
+                    </small>
                   </button>
 
                 </div>
@@ -249,44 +321,67 @@ export default function RegisterPage() {
 
               </div>
 
-              {/* NAME */}
+              {/* FULL NAME */}
+
               <div className="field-group">
-                <label htmlFor="name">Full Name</label>
+
+                <label htmlFor="name">
+                  Full Name
+                </label>
 
                 <input
                   id="name"
                   value={form.name}
                   onChange={(e) =>
-                    changeField("name", e.target.value)
+                    changeField(
+                      "name",
+                      e.target.value
+                    )
                   }
                   placeholder="Enter your full name"
                   autoComplete="name"
                   required
                 />
+
               </div>
 
               {/* EMAIL */}
+
               <div className="field-group">
-                <label htmlFor="email">Email Address</label>
+
+                <label htmlFor="email">
+                  Email Address
+                </label>
 
                 <input
                   id="email"
                   value={form.email}
                   onChange={(e) =>
-                    changeField("email", e.target.value)
+                    changeField(
+                      "email",
+                      e.target.value
+                    )
                   }
                   type="email"
                   placeholder="you@example.com"
                   autoComplete="email"
                   required
                 />
+
               </div>
 
               {/* MOBILE */}
+
               <div className="field-group">
+
                 <label htmlFor="mobile">
+
                   Mobile Number
-                  <span className="optional">Optional</span>
+
+                  <span className="optional">
+                    Optional
+                  </span>
+
                 </label>
 
                 <input
@@ -295,7 +390,10 @@ export default function RegisterPage() {
                   onChange={(e) =>
                     changeField(
                       "mobile",
-                      e.target.value.replace(/\D/g, "")
+                      e.target.value.replace(
+                        /\D/g,
+                        ""
+                      )
                     )
                   }
                   type="tel"
@@ -304,17 +402,25 @@ export default function RegisterPage() {
                   placeholder="10-digit mobile number"
                   autoComplete="tel"
                 />
+
               </div>
 
               {/* PASSWORD */}
+
               <div className="field-group">
-                <label htmlFor="password">Password</label>
+
+                <label htmlFor="password">
+                  Password
+                </label>
 
                 <input
                   id="password"
                   value={form.password}
                   onChange={(e) =>
-                    changeField("password", e.target.value)
+                    changeField(
+                      "password",
+                      e.target.value
+                    )
                   }
                   type="password"
                   placeholder="Minimum 8 characters"
@@ -324,11 +430,14 @@ export default function RegisterPage() {
                 />
 
                 <small className="password-hint">
-                  Use at least 8 characters for your password.
+                  Use at least 8 characters
+                  for your password.
                 </small>
+
               </div>
 
               {/* ERROR */}
+
               {error && (
                 <div className="register-error">
                   {error}
@@ -336,6 +445,7 @@ export default function RegisterPage() {
               )}
 
               {/* SUBMIT */}
+
               <button
                 type="submit"
                 className="register-submit"
@@ -345,7 +455,9 @@ export default function RegisterPage() {
                   ? "Creating Account..."
                   : "Create Account"}
 
-                {!loading && <ArrowRight size={19} />}
+                {!loading && (
+                  <ArrowRight size={19} />
+                )}
               </button>
 
             </form>
@@ -356,23 +468,12 @@ export default function RegisterPage() {
 
             <p className="login-text">
               Already have an account?{" "}
+
               <Link href="/login">
                 Login
                 <ArrowRight size={15} />
               </Link>
             </p>
-
-            <div className="admin-note">
-              <ShieldCheck size={18} />
-
-              <div>
-                <strong>Admin Access</strong>
-                <p>
-                  Admin accounts are managed directly by
-                  the SkillClass owner.
-                </p>
-              </div>
-            </div>
 
           </div>
 
@@ -401,6 +502,7 @@ export default function RegisterPage() {
           overflow: hidden;
 
           display: grid;
+
           grid-template-columns:
             minmax(0, 1.05fr)
             minmax(520px, 0.95fr);
@@ -410,7 +512,9 @@ export default function RegisterPage() {
             0 5px 20px rgba(15, 23, 42, 0.05);
         }
 
-        /* LEFT */
+        /* =========================
+           LEFT BRAND
+        ========================= */
 
         .register-brand {
           position: relative;
@@ -446,7 +550,12 @@ export default function RegisterPage() {
         .brand-circle {
           position: absolute;
           border-radius: 50%;
-          border: 1px solid rgba(255,255,255,0.13);
+          border: 1px solid rgba(
+            255,
+            255,
+            255,
+            0.13
+          );
           pointer-events: none;
         }
 
@@ -482,7 +591,9 @@ export default function RegisterPage() {
           letter-spacing: -0.7px;
         }
 
-        .register-logo > span:last-child > span {
+        .register-logo
+          > span:last-child
+          > span {
           color: #ddd6fe;
         }
 
@@ -496,8 +607,12 @@ export default function RegisterPage() {
 
           border-radius: 14px;
 
-          background: rgba(255,255,255,0.15);
-          border: 1px solid rgba(255,255,255,0.24);
+          background:
+            rgba(255,255,255,0.15);
+
+          border:
+            1px solid
+            rgba(255,255,255,0.24);
 
           font-size: 23px;
           font-weight: 900;
@@ -522,13 +637,18 @@ export default function RegisterPage() {
 
           border-radius: 999px;
 
-          background: rgba(255,255,255,0.12);
-          border: 1px solid rgba(255,255,255,0.17);
+          background:
+            rgba(255,255,255,0.12);
+
+          border:
+            1px solid
+            rgba(255,255,255,0.17);
 
           color: #ede9fe;
 
           font-size: 12px;
           font-weight: 800;
+
           letter-spacing: 1px;
 
           margin-bottom: 24px;
@@ -537,10 +657,13 @@ export default function RegisterPage() {
         .register-brand-content h1 {
           margin: 0;
 
-          font-size: clamp(58px, 6vw, 88px);
+          font-size:
+            clamp(58px, 6vw, 88px);
+
           line-height: 0.94;
 
           letter-spacing: -5px;
+
           font-weight: 900;
         }
 
@@ -553,9 +676,11 @@ export default function RegisterPage() {
 
           margin: 29px 0 0;
 
-          color: rgba(255,255,255,0.78);
+          color:
+            rgba(255,255,255,0.78);
 
           font-size: 17px;
+
           line-height: 1.7;
         }
 
@@ -563,18 +688,21 @@ export default function RegisterPage() {
           margin-top: 35px;
 
           display: grid;
+
           gap: 15px;
         }
 
         .register-points > div {
           display: flex;
           align-items: center;
+
           gap: 13px;
         }
 
         .register-points > div > span {
           width: 42px;
           height: 42px;
+
           flex: 0 0 42px;
 
           display: flex;
@@ -583,18 +711,26 @@ export default function RegisterPage() {
 
           border-radius: 12px;
 
-          background: rgba(255,255,255,0.12);
-          border: 1px solid rgba(255,255,255,0.13);
+          background:
+            rgba(255,255,255,0.12);
+
+          border:
+            1px solid
+            rgba(255,255,255,0.13);
         }
 
         .register-points strong {
           display: block;
+
           font-size: 14px;
+
           margin-bottom: 3px;
         }
 
         .register-points small {
-          color: rgba(255,255,255,0.62);
+          color:
+            rgba(255,255,255,0.62);
+
           font-size: 12px;
         }
 
@@ -605,13 +741,16 @@ export default function RegisterPage() {
           display: flex;
           justify-content: space-between;
 
-          color: rgba(255,255,255,0.52);
+          color:
+            rgba(255,255,255,0.52);
 
           font-size: 12px;
           font-weight: 600;
         }
 
-        /* RIGHT */
+        /* =========================
+           RIGHT FORM
+        ========================= */
 
         .register-form-panel {
           background: #ffffff;
@@ -647,9 +786,11 @@ export default function RegisterPage() {
           color: #111827;
 
           font-size: 40px;
+
           line-height: 1.12;
 
           letter-spacing: -1.5px;
+
           font-weight: 850;
         }
 
@@ -659,11 +800,13 @@ export default function RegisterPage() {
           color: #64748b;
 
           font-size: 14px;
+
           line-height: 1.6;
         }
 
         .field-group {
           display: grid;
+
           gap: 7px;
 
           margin-bottom: 17px;
@@ -671,17 +814,21 @@ export default function RegisterPage() {
 
         .field-group > label {
           display: flex;
+
           justify-content: space-between;
 
           color: #1e293b;
 
           font-size: 12px;
+
           font-weight: 750;
         }
 
         .optional {
           color: #94a3b8;
+
           font-size: 11px;
+
           font-weight: 600;
         }
 
@@ -693,12 +840,16 @@ export default function RegisterPage() {
 
           padding: 0 15px;
 
-          border: 1px solid #dbe1ea;
+          border:
+            1px solid
+            #dbe1ea;
+
           border-radius: 12px;
 
           outline: none;
 
           background: #fbfcfe;
+
           color: #111827;
 
           font-size: 14px;
@@ -715,18 +866,24 @@ export default function RegisterPage() {
 
         .field-group input:focus {
           border-color: #6d5ce7;
+
           background: #ffffff;
 
           box-shadow:
-            0 0 0 4px rgba(91,77,232,0.1);
+            0 0 0 4px
+            rgba(91,77,232,0.1);
         }
 
         /* ROLE */
 
         .role-grid {
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+
+          grid-template-columns:
+            repeat(3, 1fr);
+
           gap: 9px;
+
           margin-top: 7px;
         }
 
@@ -737,7 +894,9 @@ export default function RegisterPage() {
 
           border-radius: 12px;
 
-          border: 1px solid #dbe1ea;
+          border:
+            1px solid
+            #dbe1ea;
 
           background: #ffffff;
 
@@ -746,8 +905,11 @@ export default function RegisterPage() {
           cursor: pointer;
 
           display: flex;
+
           flex-direction: column;
+
           align-items: center;
+
           justify-content: center;
 
           transition:
@@ -758,17 +920,24 @@ export default function RegisterPage() {
         }
 
         .role-card:hover {
-          transform: translateY(-1px);
+          transform:
+            translateY(-1px);
+
           border-color: #c7c9ff;
         }
 
         .role-active {
-          border: 2px solid #5b4de8;
+          border:
+            2px solid
+            #5b4de8;
+
           background: #f7f5ff;
+
           color: #4f46e5;
 
           box-shadow:
-            0 7px 18px rgba(91,77,232,0.09);
+            0 7px 18px
+            rgba(91,77,232,0.09);
         }
 
         .role-icon {
@@ -776,6 +945,7 @@ export default function RegisterPage() {
           height: 32px;
 
           display: flex;
+
           align-items: center;
           justify-content: center;
 
@@ -788,11 +958,13 @@ export default function RegisterPage() {
 
         .role-active .role-icon {
           background: #e9e5ff;
+
           color: #5b4de8;
         }
 
         .role-card strong {
           font-size: 12px;
+
           font-weight: 800;
         }
 
@@ -824,30 +996,43 @@ export default function RegisterPage() {
 
         .password-hint {
           color: #94a3b8;
+
           font-size: 10px;
         }
 
-        .register-error {
-          margin: 8px 0 13px;
+        /* ERROR */
 
-          padding: 11px 13px;
+        .register-error {
+          margin:
+            8px 0 13px;
+
+          padding:
+            11px 13px;
 
           border-radius: 10px;
 
           background: #fff1f2;
-          border: 1px solid #fecdd3;
+
+          border:
+            1px solid
+            #fecdd3;
 
           color: #be123c;
 
           font-size: 12px;
+
           line-height: 1.5;
         }
 
+        /* BUTTON */
+
         .register-submit {
           width: 100%;
+
           min-height: 53px;
 
           border: 0;
+
           border-radius: 12px;
 
           background:
@@ -860,17 +1045,22 @@ export default function RegisterPage() {
           color: white;
 
           display: flex;
+
           align-items: center;
+
           justify-content: center;
+
           gap: 8px;
 
           font-size: 14px;
+
           font-weight: 800;
 
           cursor: pointer;
 
           box-shadow:
-            0 11px 25px rgba(91,77,232,0.22);
+            0 11px 25px
+            rgba(91,77,232,0.22);
 
           transition:
             transform 0.2s ease,
@@ -879,21 +1069,27 @@ export default function RegisterPage() {
         }
 
         .register-submit:hover:not(:disabled) {
-          transform: translateY(-2px);
+          transform:
+            translateY(-2px);
 
           box-shadow:
-            0 15px 30px rgba(91,77,232,0.28);
+            0 15px 30px
+            rgba(91,77,232,0.28);
         }
 
         .register-submit:disabled {
           opacity: 0.7;
+
           cursor: not-allowed;
         }
+
+        /* DIVIDER */
 
         .register-divider {
           position: relative;
 
-          margin: 22px 0 17px;
+          margin:
+            22px 0 17px;
 
           text-align: center;
         }
@@ -905,6 +1101,7 @@ export default function RegisterPage() {
 
           left: 0;
           right: 0;
+
           top: 50%;
 
           height: 1px;
@@ -914,15 +1111,18 @@ export default function RegisterPage() {
 
         .register-divider span {
           position: relative;
+
           z-index: 1;
 
-          padding: 0 10px;
+          padding:
+            0 10px;
 
           background: white;
 
           color: #94a3b8;
 
           font-size: 10px;
+
           font-weight: 750;
         }
 
@@ -938,7 +1138,9 @@ export default function RegisterPage() {
 
         .login-text a {
           display: inline-flex;
+
           align-items: center;
+
           gap: 3px;
 
           color: #5b4de8;
@@ -952,45 +1154,9 @@ export default function RegisterPage() {
           text-decoration: underline;
         }
 
-        .admin-note {
-          margin-top: 20px;
-
-          padding: 13px;
-
-          display: flex;
-          gap: 10px;
-
-          border: 1px solid #e7e9f2;
-          border-radius: 12px;
-
-          background: #fafaff;
-
-          color: #64748b;
-        }
-
-        .admin-note > svg {
-          flex: 0 0 auto;
-          color: #5b4de8;
-        }
-
-        .admin-note strong {
-          display: block;
-
-          margin-bottom: 3px;
-
-          color: #334155;
-
-          font-size: 11px;
-        }
-
-        .admin-note p {
-          margin: 0;
-
-          font-size: 10px;
-          line-height: 1.5;
-        }
-
-        /* TABLET */
+        /* =========================
+           TABLET
+        ========================= */
 
         @media (max-width: 1050px) {
 
@@ -1018,39 +1184,51 @@ export default function RegisterPage() {
 
         }
 
-        /* MOBILE */
+        /* =========================
+           MOBILE
+        ========================= */
 
         @media (max-width: 780px) {
 
           .register-page {
             padding: 0;
+
             background: #ffffff;
           }
 
           .register-shell {
             min-height: 100vh;
+
             border-radius: 0;
+
             grid-template-columns: 1fr;
+
             box-shadow: none;
           }
 
           .register-brand {
             min-height: 310px;
-            padding: 28px 25px;
+
+            padding:
+              28px 25px;
           }
 
           .register-brand-content {
-            padding: 30px 0 10px;
+            padding:
+              30px 0 10px;
           }
 
           .register-brand-content h1 {
             font-size: 51px;
+
             letter-spacing: -3px;
           }
 
           .register-brand-content > p {
             margin-top: 18px;
+
             font-size: 14px;
+
             line-height: 1.55;
           }
 
@@ -1063,7 +1241,9 @@ export default function RegisterPage() {
           }
 
           .register-form-panel {
-            padding: 38px 25px 45px;
+            padding:
+              38px 25px 45px;
+
             align-items: flex-start;
           }
 
@@ -1093,7 +1273,8 @@ export default function RegisterPage() {
           }
 
           .register-form-panel {
-            padding: 32px 20px 40px;
+            padding:
+              32px 20px 40px;
           }
 
           .register-heading h2 {
@@ -1115,6 +1296,7 @@ export default function RegisterPage() {
   );
 }
 
+/* Small decorative icon */
 function SparkleIcon() {
   return (
     <span
