@@ -1,0 +1,244 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  SELLER
+  ADMIN
+}
+
+enum ApprovalStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  REJECTED
+  DISABLED
+}
+
+enum PaymentStatus {
+  CREATED
+  PENDING_APPROVAL
+  APPROVED
+  REJECTED
+  FAILED
+  REFUNDED
+}
+
+enum LedgerType {
+  CREDIT
+  DEBIT
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
+
+model User {
+  id             String          @id @default(cuid())
+  name           String
+  email          String          @unique
+  mobile         String?
+  passwordHash   String
+  role           Role
+  active         Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  teacherProfile TeacherProfile?
+  sellerProfile  SellerProfile?
+  courses        Course[]        @relation("TeacherCourses")
+  pdfBooks       PdfBook[]       @relation("SellerPdfBooks")
+  subscriptions  Subscription[]
+  pdfPurchases   PdfPurchase[]
+  payments       Payment[]
+  notifications  Notification[]
+  reviews        Review[]
+  wallet         Wallet?
+}
+
+model TeacherProfile {
+  id              String @id @default(cuid())
+  userId          String @unique
+  qualification   String?
+  expertise       String?
+  bio             String?
+  user            User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SellerProfile {
+  id       String @id @default(cuid())
+  userId   String @unique
+  bio      String?
+  user     User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  courses   Course[]
+  pdfBooks  PdfBook[]
+}
+
+model Course {
+  id              String         @id @default(cuid())
+  teacherId       String
+  categoryId      String?
+  title           String
+  slug            String         @unique
+  description     String
+  thumbnail       String?
+  monthlyFee      Int
+  startDate       DateTime?
+  startTime       String?
+  endTime         String?
+  schedule        String?
+  approvalStatus  ApprovalStatus @default(DRAFT)
+  active          Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  teacher         User           @relation("TeacherCourses", fields: [teacherId], references: [id], onDelete: Cascade)
+  category        Category?      @relation(fields: [categoryId], references: [id])
+  subscriptions   Subscription[]
+  liveSessions    LiveSession[]
+  payments        Payment[]
+  reviews         Review[]
+}
+
+model LiveSession {
+  id        String   @id @default(cuid())
+  courseId  String
+  title     String
+  startsAt  DateTime
+  endsAt    DateTime?
+  joinUrl   String?
+  createdAt DateTime @default(now())
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id        String             @id @default(cuid())
+  studentId String
+  courseId  String
+  startDate DateTime
+  endDate   DateTime
+  status    SubscriptionStatus @default(ACTIVE)
+  student   User               @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course    Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  @@unique([studentId, courseId])
+}
+
+model PdfBook {
+  id             String         @id @default(cuid())
+  sellerId       String
+  categoryId     String?
+  title          String
+  slug           String         @unique
+  description    String
+  coverUrl       String?
+  storageKey     String
+  price          Int
+  author         String?
+  language       String?
+  approvalStatus ApprovalStatus @default(DRAFT)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  seller         User           @relation("SellerPdfBooks", fields: [sellerId], references: [id], onDelete: Cascade)
+  category       Category?      @relation(fields: [categoryId], references: [id])
+  purchases      PdfPurchase[]
+  payments       Payment[]
+  reviews        Review[]
+}
+
+model PdfPurchase {
+  id         String   @id @default(cuid())
+  studentId  String
+  pdfBookId  String
+  createdAt  DateTime @default(now())
+  student    User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  pdfBook    PdfBook  @relation(fields: [pdfBookId], references: [id], onDelete: Cascade)
+  @@unique([studentId, pdfBookId])
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  userId            String
+  courseId          String?
+  pdfBookId         String?
+  gatewayPaymentId  String?       @unique
+  gatewayOrderId    String?
+  amount            Int
+  commission        Int            @default(0)
+  recipientAmount   Int            @default(0)
+  status            PaymentStatus  @default(CREATED)
+  approvedAt        DateTime?
+  createdAt         DateTime      @default(now())
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course            Course?       @relation(fields: [courseId], references: [id])
+  pdfBook           PdfBook?      @relation(fields: [pdfBookId], references: [id])
+  @@index([status])
+}
+
+model Wallet {
+  id        String            @id @default(cuid())
+  userId    String            @unique
+  balance   Int               @default(0)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entries   WalletEntry[]
+}
+
+model WalletEntry {
+  id          String     @id @default(cuid())
+  walletId    String
+  type        LedgerType
+  amount      Int
+  referenceId String?
+  description String
+  createdAt   DateTime   @default(now())
+  wallet      Wallet     @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  @@index([walletId, createdAt])
+}
+
+model Review {
+  id        String    @id @default(cuid())
+  userId    String
+  courseId  String?
+  pdfBookId String?
+  rating    Int
+  comment   String
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course?   @relation(fields: [courseId], references: [id])
+  pdfBook   PdfBook?  @relation(fields: [pdfBookId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  adminId    String
+  action     String
+  targetType String
+  targetId   String
+  previous   String?
+  next       String?
+  createdAt  DateTime @default(now())
+}
