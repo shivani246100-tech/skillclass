@@ -6,31 +6,41 @@ export async function Navbar() {
 
   return (
     <header className="nav">
-      <div
-        className="container"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          width: "100%",
-        }}
-      >
+      <div className="container nav-inner">
+        {/* Logo */}
         <Link href="/" className="logo">
-          <span className="logo-mark">S</span>
-          SkillClass
+          <span className="logo-mark">
+            <span>S</span>
+          </span>
+
+          <span className="logo-text">
+            Skill<span>Class</span>
+          </span>
         </Link>
 
+        {/* Navigation */}
         <nav className="nav-links">
-          <Link href="/">Home</Link>
+          <Link href="/" className="nav-link">
+            Home
+          </Link>
 
-          <Link href="/classes">Classes</Link>
+          <Link href="/classes" className="nav-link">
+            Classes
+          </Link>
 
-          <Link href="/pdf-books">PDF Books</Link>
+          <Link href="/pdf-books" className="nav-link">
+            PDF Books
+          </Link>
 
           {!user && (
             <>
-              <Link href="/teacher">Become a Teacher</Link>
-              <Link href="/seller">Become a Seller</Link>
+              <Link href="/teacher" className="nav-link nav-special">
+                Become a Teacher
+              </Link>
+
+              <Link href="/seller" className="nav-link nav-special">
+                Become a Seller
+              </Link>
             </>
           )}
 
@@ -38,7 +48,7 @@ export async function Navbar() {
             <>
               <Link
                 href={dashboardPath(user.role)}
-                className="btn btn-outline"
+                className="btn btn-outline nav-dashboard"
               >
                 Dashboard
               </Link>
@@ -48,10 +58,7 @@ export async function Navbar() {
                 method="POST"
                 style={{ display: "inline" }}
               >
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                >
+                <button type="submit" className="btn btn-primary nav-logout">
                   Logout
                 </button>
               </form>
@@ -62,8 +69,8 @@ export async function Navbar() {
                 Login
               </Link>
 
-              <Link href="/register" className="btn btn-primary">
-                Register
+              <Link href="/register" className="btn btn-primary nav-register">
+                Get Started
               </Link>
             </>
           )}
